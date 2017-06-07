@@ -4,55 +4,85 @@
 #include <string>
 using namespace std;
 
+string arraytostring(int* num_array, int length) ;
+int additionfcn (int* twoDimensionArray, int rows, int columns);
+
+
 int multiplyLargeNumbers(int* first_number,
                          int first_number_length,
                          int* second_number,
                          int second_number_length,
                          int* result) {
-    // Now write your code here to multiply the two numbers
-    // and write the result to result, and return its number
-    // of digits.
-    
-    //string first_num_string = numberAsArrayToString(first_number, first_number_length); //passes firstnumber array and returns string value of it
     
     
+    int num1 = stoi(arraytostring(first_number, first_number_length));
+    int num2 = stoi(arraytostring(second_number, second_number_length));
+    int remainder1 = num1%10;
+    int remainder2 = num2%10;
+    int rows,columns;
+    if (remainder1 == 0){
+        rows = num1 / 10;
+    }
+    else{
+        rows = (num1/10)+1;
+    }
     
-    //we will have an array and shift left will have to add a position to the left of the array and put 0 there.
-    int carry_array[1000];
-    int carry_over = 0;
-    int k =0 ;
-    for (int i = first_number_length-1 ; i>=0; i--){
-        for (int j = second_number_length; j>=0; j--){
-            if (second_number[i]*first_number[j] < 10){
-                int local_carry = 0;
-                local_carry = carry_over;
-                if (local_carry > 0){
-                    carry_array[k] = ((second_number[i]*first_number[j])+ carry_over);
-                }
-                else{
-                    carry_array[k] = second_number[i]*first_number[j];
-                }
-                k++;
-            }
-            
-            else{
-                int multiplied_number = second_number[i]*first_number[j];
-                int to_put_in_array = multiplied_number%10;
-                carry_over = multiplied_number/10;
-                carry_array[k] = to_put_in_array;
-                k++;
-            }
-        }
-        //iterate through this array to make sure that it works.
+    if(remainder2 == 0) {
+        columns = num2 / 10;
+    }
+    else{
+        columns = (num2/10)+1;
         
     }
-    return 0;
+    int twoDimensionArray[rows][columns];
+    int rowarray[rows];
+    int colarray[columns];
+    while (true){
+        if (remainder1 == 0){
+            for (int i = 0 ; i < rows ; i++){
+                rowarray[i] = 10;
+            }
+        }
+        else{
+            for (int i = 0 ; i < rows-1 ; i++){
+                rowarray[i] = 10;
+            }
+            rowarray[rows-1] = remainder1;
+            break;
+        }
+    }
+    
+    while (true){
+        if (remainder2 == 0){
+            for (int i = 0 ; i < columns ; i++){
+                colarray[i] = 10;
+            }
+        }
+        else{
+            for (int i = 0 ; i < columns-1 ; i++){
+                colarray[i] = 10;
+            }
+            colarray[columns-1] = remainder2;
+            break;
+        }
+    }
+    for (int i = 0; i< rows; i++){
+        for (int j = 0; j< columns; j++){
+            twoDimensionArray[i][j] = rowarray[i]*colarray[j];
+        }
+    }
+    //test
+    int summation = 0;
+    for (int i = 0; i< rows; i++){
+        for (int j = 0; j<columns; j++){
+            summation += twoDimensionArray[i][j];
+        }
+    }
+    return summation;
 }
 
-
-
 int stringtoarray(const string& num_as_string,
-                                int* num_array) {
+                  int* num_array) {
     for (int i = 0; i < num_as_string.length(); ++i) {
         if (num_as_string[i] >= '0' &&
             num_as_string[i] <= '9') {
@@ -87,8 +117,8 @@ int main(){
         string first_number_as_string;
         cin >> first_number_as_string;
         first_number_length = stringtoarray(
-                                                          first_number_as_string,
-                                                          first_number);
+                                            first_number_as_string,
+                                            first_number);
     }
     
     {
@@ -97,8 +127,8 @@ int main(){
         string second_number_as_string;
         cin >> second_number_as_string;
         second_number_length = stringtoarray(
-                                                           second_number_as_string,
-                                                           second_number);
+                                             second_number_as_string,
+                                             second_number);
     }
     cout << "First number is : " << arraytostring(first_number, first_number_length) << endl;
     cout << "Second number is : " << arraytostring(second_number, second_number_length) << endl;
@@ -107,12 +137,12 @@ int main(){
     
     
     int result[20000];
-
+    
     int result_length =
     multiplyLargeNumbers(first_number, first_number_length,
                          second_number, second_number_length,
                          result);
     
-    cout << "Result: " << arraytostring(result, result_length) << endl;
+    cout << "Result: " << result_length << endl;
     return 0;
 }
